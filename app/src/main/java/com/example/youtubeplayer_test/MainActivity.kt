@@ -11,16 +11,6 @@ import android.webkit.WebView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.youtubeplayer_test.ui.theme.YoutubePlayer_TestTheme
 
 class MainActivity : ComponentActivity() {
     private lateinit var webView: WebView
@@ -29,14 +19,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        enableEdgeToEdge()
-
-        webView = WebView(this)  // WebView 객체 초기화
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
             WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED
         )
+
+        webView = WebView(this)  // WebView 객체 초기화
 
         setContent {
             YouTubePlayer(videoId = videoId, webView = webView)  // WebView 객체 전달
