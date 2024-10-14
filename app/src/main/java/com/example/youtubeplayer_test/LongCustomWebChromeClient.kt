@@ -10,8 +10,6 @@ import android.widget.FrameLayout
 class LongCustomWebChromeClient(private val activity: Activity) : WebChromeClient() {
     private var customView: View? = null
     private var customViewCallback: CustomViewCallback? = null
-    private var originalOrientation: Int = 0
-    private var originalSystemUiVisibility: Int = 0
 
     override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
         if (customView != null) {
@@ -19,8 +17,6 @@ class LongCustomWebChromeClient(private val activity: Activity) : WebChromeClien
             return
         }
         customView = view
-        originalOrientation = activity.requestedOrientation
-        originalSystemUiVisibility = activity.window.decorView.systemUiVisibility
         customViewCallback = callback
 
         activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
@@ -38,8 +34,8 @@ class LongCustomWebChromeClient(private val activity: Activity) : WebChromeClien
         (activity.window.decorView as FrameLayout).removeView(customView)
         customView = null
 
-        activity.window.decorView.systemUiVisibility = originalSystemUiVisibility
-        activity.requestedOrientation = originalOrientation
+        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
+        activity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
         customViewCallback?.onCustomViewHidden()
         customViewCallback = null
