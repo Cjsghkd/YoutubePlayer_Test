@@ -1,9 +1,11 @@
 package com.example.youtubeplayer_test
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.ContextWrapper
 import android.view.View
 import android.view.ViewGroup
-import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,10 +20,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun YouTubePlayer(videoId: String, webView: WebView) {
     val context = LocalContext.current
+    val activity = context.findActivity()
     val displayMetrics = context.resources.displayMetrics
     val screenWidth = displayMetrics.widthPixels / displayMetrics.density
 
-    // 16:9 비율로 높이 계산
     val aspectRatioHeight = (screenWidth * 9 / 16).dp
 
     AndroidView(
@@ -36,7 +38,7 @@ fun YouTubePlayer(videoId: String, webView: WebView) {
                     settings.mixedContentMode = 0
                 }
                 webViewClient = WebViewClient()
-                webChromeClient = WebChromeClient()
+                webChromeClient = LongCustomWebChromeClient(activity)
                 setLayerType(View.LAYER_TYPE_HARDWARE, null)
                 layoutParams = ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -48,4 +50,13 @@ fun YouTubePlayer(videoId: String, webView: WebView) {
         update = { it.loadUrl("https://www.youtube.com/embed/$videoId") },
         modifier = Modifier.fillMaxWidth().height(aspectRatioHeight),
     )
+}
+
+fun Context.findActivity(): Activity {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+    throw IllegalStateException("no activity")
 }
